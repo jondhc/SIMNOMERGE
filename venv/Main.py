@@ -1,27 +1,29 @@
 import os
-import xml.etree.ElementTree as ET
+import lxml.etree as ET
 
 paths = []
 
-def openDocs(directory):
+def open_docs(directory):
+    trees = []
     for docName in os.listdir(directory):
         if docName.endswith(".xml"):
-            tags = []
             path = directory + "win_tale.xml"
             tree = parse(path)
-            for element in tree.iter():
-                tags.append(element.tag)
-                if not element:
-                    tags.append(element.text)
-                    paths.append(tags)
-                    tags = []
-    print(paths)
+            trees.append(tree)
+    return trees
 
 def parse(path):
     return ET.parse(path)
 
-def getContexts(node):
-    return null
+def get_contexts(tree):
+    for element in tree.iter():
+        if not element:
+            paths.append(tree.getpath(element))
 
 
-openDocs("./Collection/")
+if __name__ == '__main__':
+    trees = open_docs("./Collection/")
+    for tree in trees:
+        get_contexts(tree)
+    print(paths)
+
