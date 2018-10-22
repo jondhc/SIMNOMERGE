@@ -3,9 +3,8 @@ import lxml.etree as et
 import nltk
 from nltk.tokenize import word_tokenize
 
-paths = []
 trees = {}
-ctdf_dictionary = {}
+ctd_dictionary = {}
 
 
 def open_docs(directory):
@@ -23,11 +22,11 @@ def parse(path):
 def get_leaves_contexts(tree, doc_name):
     for element in tree.iter():
         if not element:
-            paths.append(tree.getpath(element))
+            path = tree.getpath(element)
             terms = tokenize_leave(element.text)
             for term in terms:
                 if len(term) > 0 and term != "." and term != ",":
-                    store_in_ctdf_dictionary(tree.getpath(element), term, doc_name)
+                    store_in_ctd_dictionary(path, term, doc_name)
 
 
 def get_all_leaves_contexts():
@@ -41,9 +40,9 @@ def tokenize_leave(leave_content):
     return tokens_list
 
 
-def store_in_ctdf_dictionary(context, term, document):
+def store_in_ctd_dictionary(context, term, document):
     context = context + "/" + term
-    ctdf_dictionary.setdefault(context, []).append(document)
+    ctd_dictionary.setdefault(context, []).append(document)
 
 
 if __name__ == '__main__':
