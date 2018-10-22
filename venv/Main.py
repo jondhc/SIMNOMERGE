@@ -12,7 +12,6 @@ ctd_dictionary = {}
 ctdf_dictionary = {}
 weights_dictionary = {}
 
-
 def show_dictionary(dictionary):
     pp = pprint.PrettyPrinter(indent=2)
     pp.pprint(list(dictionary.items()))
@@ -75,10 +74,15 @@ def create_weights_dictionary():
         weight = math.log10((len(trees)) / len(documents_and_frequency))
         weights_dictionary[context_and_term] = weight
 
+def create_ctdw_dictionary():
+    for (context_and_term, documents_and_frequency) in ctdf_dictionary.items():
+        for document_and_frequency in documents_and_frequency:
+            ctdf_dictionary[context_and_term][document_and_frequency] = ctdf_dictionary[context_and_term][document_and_frequency] * weights_dictionary[context_and_term]
 
 if __name__ == '__main__':
     open_docs("./Collection/")
     get_all_leaves_contexts()
     create_ctdf_dictionary()
     create_weights_dictionary()
-    print(weights_dictionary)
+    create_ctdw_dictionary()
+    show_dictionary(ctdf_dictionary)
