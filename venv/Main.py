@@ -46,7 +46,6 @@ def get_all_leaves_contexts():
 def tokenize_leave(leave_content):
     text = str(leave_content)
     tokens_list = word_tokenize(text)
-    tol
     return tokens_list
 
 
