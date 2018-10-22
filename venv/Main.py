@@ -3,11 +3,13 @@ import pprint
 import lxml.etree as et
 import nltk
 import collections
+import math
 from nltk.tokenize import word_tokenize
 
 trees = {}
 ctd_dictionary = {}
 ctdf_dictionary = {}
+weights_dictionary = {}
 
 def showDictionary(dictionary):
     pp = pprint.PrettyPrinter(indent = 2)
@@ -44,6 +46,7 @@ def get_all_leaves_contexts():
 def tokenize_leave(leave_content):
     text = str(leave_content)
     tokens_list = word_tokenize(text)
+    tol
     return tokens_list
 
 
@@ -57,8 +60,14 @@ def create_ctdf_dictionary():
         ctdf_dictionary.setdefault(context_and_term, documents_frequency)
 
 
+def create_weights_dictionary():
+    for (context_and_term, documents_and_frequency) in ctdf_dictionary.items():
+        weight = math.log10((len(trees))/len(documents_and_frequency))
+        weights_dictionary[context_and_term] = weight
+
 if __name__ == '__main__':
     open_docs("./Collection/")
     get_all_leaves_contexts()
     create_ctdf_dictionary()
-    showDictionary(ctdf_dictionary)
+    create_weights_dictionary()
+
