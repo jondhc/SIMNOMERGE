@@ -1,10 +1,17 @@
 import os
+import pprint
 import lxml.etree as et
 import nltk
+import collections
 from nltk.tokenize import word_tokenize
 
 trees = {}
 ctd_dictionary = {}
+ctdf_dictionary = {}
+
+def showDictionary(dictionary):
+    pp = pprint.PrettyPrinter(indent = 2)
+    pp.pprint(list(dictionary.items()))
 
 
 def open_docs(directory):
@@ -44,7 +51,14 @@ def store_in_ctd_dictionary(context, term, document):
     context = context + "/" + term
     ctd_dictionary.setdefault(context, []).append(document)
 
+def create_ctdf_dictionary():
+    for (context_and_term, documents) in ctd_dictionary.items():
+        documents_frequency = collections.Counter(documents)
+        ctdf_dictionary.setdefault(context_and_term, documents_frequency)
+
 
 if __name__ == '__main__':
     open_docs("./Collection/")
     get_all_leaves_contexts()
+    create_ctdf_dictionary()
+    showDictionary(ctdf_dictionary)
