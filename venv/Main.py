@@ -4,24 +4,23 @@ import nltk
 from nltk.tokenize import word_tokenize
 
 paths = []
-trees = []
+trees = {}
 ctdf_dictionary = {}
 
 
 def open_docs(directory):
-    for docName in os.listdir(directory):
-        if docName.endswith(".xml"):
-            path = directory + docName
+    for doc_name in os.listdir(directory):
+        if doc_name.endswith(".xml"):
+            path = directory + doc_name
             tree = parse(path)
-            trees.append(tree)
+            trees[doc_name] = tree
 
 
 def parse(path):
     return et.parse(path)
 
 
-def get_leaves_contexts(tree):
-    doc_name = "test"  # TEMPORARY VAR FOR DOC NAME
+def get_leaves_contexts(tree, doc_name):
     for element in tree.iter():
         if not element:
             paths.append(tree.getpath(element))
@@ -32,8 +31,8 @@ def get_leaves_contexts(tree):
 
 
 def get_all_leaves_contexts():
-    for tree in trees:
-        get_leaves_contexts(tree)
+    for (doc_name, tree) in trees.items():
+        get_leaves_contexts(tree, doc_name)
 
 
 def tokenize_leave(leave_content):
@@ -50,4 +49,3 @@ def store_in_ctdf_dictionary(context, term, document):
 if __name__ == '__main__':
     open_docs("./Collection/")
     get_all_leaves_contexts()
-    print(ctdf_dictionary)
