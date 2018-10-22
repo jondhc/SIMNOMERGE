@@ -5,14 +5,16 @@ import nltk
 import collections
 import math
 from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
 
 trees = {}
 ctd_dictionary = {}
 ctdf_dictionary = {}
 weights_dictionary = {}
 
-def showDictionary(dictionary):
-    pp = pprint.PrettyPrinter(indent = 2)
+
+def show_dictionary(dictionary):
+    pp = pprint.PrettyPrinter(indent=2)
     pp.pprint(list(dictionary.items()))
 
 
@@ -45,13 +47,22 @@ def get_all_leaves_contexts():
 
 def tokenize_leave(leave_content):
     text = str(leave_content)
+    stopwords_list = stopwords.words('english')
+    stopwords_list.append(",")
+    stopwords_list.append(".")
+    stopwords_set = set(stopwords_list)
     tokens_list = word_tokenize(text)
-    return tokens_list
+    tokens_list_without_stopwords = []
+    for token in tokens_list:
+        if token not in stopwords_set:
+            tokens_list_without_stopwords.append(token)
+    return tokens_list_without_stopwords
 
 
 def store_in_ctd_dictionary(context, term, document):
     context = context + "/" + term
     ctd_dictionary.setdefault(context, []).append(document)
+
 
 def create_ctdf_dictionary():
     for (context_and_term, documents) in ctd_dictionary.items():
@@ -61,12 +72,13 @@ def create_ctdf_dictionary():
 
 def create_weights_dictionary():
     for (context_and_term, documents_and_frequency) in ctdf_dictionary.items():
-        weight = math.log10((len(trees))/len(documents_and_frequency))
+        weight = math.log10((len(trees)) / len(documents_and_frequency))
         weights_dictionary[context_and_term] = weight
+
 
 if __name__ == '__main__':
     open_docs("./Collection/")
     get_all_leaves_contexts()
     create_ctdf_dictionary()
     create_weights_dictionary()
-
+    print(weights_dictionary)
